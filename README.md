@@ -85,11 +85,11 @@ D DESCRIBE(SELECT * FROM read_csv('us-85688493-85976497.csv'));
 
 * Unfortunately, DuckDB [does not support reading bz2-compressed CSV files yet](https://github.com/duckdb/duckdb/discussions/12232) which means you will need to decompress the files in this repository before using them. This is not ideal but because the uncompressed CSV data is so big it is a recognized "trade-off".
 
-* Why does DuckDB think that `wof:parent_id` is a "VARCHAR" when [the same code](https://github.com/whosonfirst/go-whosonfirst-external/tree/main/app/ancestors/sort) used to generate these CSV files [for Foursquare data](https://github.com/whosonfirst-data/whosonfirst-external-foursquare-venue-us?tab=readme-ov-file#duckdb) yields a "BIGINT"? Because "computers", I guess.
+* Why does DuckDB think that `wof:parent_id` is a "VARCHAR" when [the same code](https://github.com/whosonfirst/go-whosonfirst-external/tree/main/app/ancestors/sort) used to generate these CSV files [for Foursquare data](https://github.com/whosonfirst-data/whosonfirst-external-foursquare-venue-us?tab=readme-ov-file#duckdb) yields a "BIGINT"? I have no idea. Any suggestions, pointers or feedback would be welcome.
 
 ### Examples
 
-For example:
+Basic SQL-like querying:
 
 ```
 D SELECT "external:id"  FROM read_csv(['us-85688543-1729435243.csv','us-85688671-85937387.csv']) WHERE "wof:parent_id" = '85937387' LIMIT 10;
@@ -144,7 +144,7 @@ D SELECT JSON("wof:hierarchies") FROM read_csv(['us-85688543-1729435243.csv','us
 
 _Computers, amirite?_
 
-And to be something which can be used in conjunction with the source Overture data. For example here are 10 Overture places that are in the locality of [Puako](https://spelunker.whosonfirst.org/id/85937387), in Hawaii:
+So that needs to be figured out but in the meantime the data are meant to be something which can be used in conjunction with the source Overture data. For example here are 10 Overture places that are in the locality of [Puako](https://spelunker.whosonfirst.org/id/85937387), in Hawaii:
 
 ```
 D SELECT w."external:id", o.names.primary  FROM read_csv(['us-85688543-1729435243.csv','us-85688671-85937387.csv']) w, read_parquet('/usr/local/data/overture/parquet/*.parquet') o  WHERE o.id = w."external:id" AND w."wof:parent_id" = '85937387' LIMIT 10;
