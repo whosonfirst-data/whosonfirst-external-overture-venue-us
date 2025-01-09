@@ -1,2 +1,2 @@
 compress:
-	find data -name '*.csv' -print | xargs bzip2
+	find data -name '*.csv' -print | xargs bzip2 -f
